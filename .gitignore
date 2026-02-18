@@ -1,0 +1,24 @@
+# Base de datos - NO subir al repositorio
+registro.sql
+*.sql
+
+# Backend Spring Boot
+backend/target/
+backend/.mvn/
+backend/*.jar
+backend/*.war
+
+# IDE
+.idea/
+*.iml
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
