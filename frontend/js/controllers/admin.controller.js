@@ -113,8 +113,56 @@ const AdminController = {
     },
 
     verCV(userId) {
-        // Abrir el selector de CV del usuario en nueva pestaña
-        window.open(`cv/harvard.html?userId=${userId}`, '_blank');
+        this.renderTemplateOptions(userId);
+        document.getElementById('cv-modal').style.display = 'flex';
+    },
+
+    closeCvModal() {
+        document.getElementById('cv-modal').style.display = 'none';
+    },
+
+    renderTemplateOptions(userId) {
+        const container = document.getElementById('cv-options-container');
+        if (!container) return;
+
+        container.innerHTML = `
+            <div class="cv-card">
+                <h3>Harvard</h3>
+                <div class="cv-buttons">
+                    <button class="btn btn-success" onclick="window.open('cv/harvard.html?userId=${userId}','_blank')"><i class="fas fa-eye"></i> Español</button>
+                    <button class="btn btn-success" onclick="window.open('cv/harvard-en.html?userId=${userId}','_blank')"><i class="fas fa-eye"></i> Inglés</button>
+                </div>
+            </div>
+            <div class="cv-card">
+                <h3>Mistli</h3>
+                <div class="cv-buttons">
+                    <button class="btn btn-success" onclick="window.open('cv/mistli.html?userId=${userId}','_blank')"><i class="fas fa-eye"></i> Español</button>
+                    <button class="btn btn-success" onclick="window.open('cv/mistli-en.html?userId=${userId}','_blank')"><i class="fas fa-eye"></i> Inglés</button>
+                </div>
+            </div>
+            <div class="cv-card">
+                <h3>Kaxtil</h3>
+                <div class="cv-buttons">
+                    <button class="btn" style="background:#ffeded;color:#c02727;border-color:#c02727;" onclick="window.open('cv/kaxtil.html?userId=${userId}&color=rojo','_blank')">Rojo</button>
+                    <button class="btn" style="background:#edf6ff;color:#0066cc;border-color:#0066cc;" onclick="window.open('cv/kaxtil.html?userId=${userId}&color=azul','_blank')">Azul</button>
+                    <button class="btn" style="background:#edffef;color:#28a745;border-color:#28a745;" onclick="window.open('cv/kaxtil.html?userId=${userId}&color=verde','_blank')">Verde</button>
+                    <div style="margin-top:5px;width:100%;">
+                        <button class="btn btn-secondary btn-small" onclick="window.open('cv/kaxtil-en.html?userId=${userId}','_blank')">English Version</button>
+                    </div>
+                </div>
+            </div>
+            <div class="cv-card">
+                <h3>Amichin</h3>
+                <div class="cv-buttons">
+                    <button class="btn" style="background:#ffeded;color:#c02727;border-color:#c02727;" onclick="window.open('cv/amichin.html?userId=${userId}&color=rojo','_blank')">Rojo</button>
+                    <button class="btn" style="background:#edf6ff;color:#0066cc;border-color:#0066cc;" onclick="window.open('cv/amichin.html?userId=${userId}&color=azul','_blank')">Azul</button>
+                    <button class="btn" style="background:#edffef;color:#28a745;border-color:#28a745;" onclick="window.open('cv/amichin.html?userId=${userId}&color=verde','_blank')">Verde</button>
+                    <div style="margin-top:5px;width:100%;">
+                        <button class="btn btn-secondary btn-small" onclick="window.open('cv/amichin-en.html?userId=${userId}','_blank')">English Version</button>
+                    </div>
+                </div>
+            </div>
+        `;
     }
 };
 

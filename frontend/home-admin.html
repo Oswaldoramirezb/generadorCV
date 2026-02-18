@@ -26,6 +26,19 @@
         </div>
     </div>
 
+    <!-- Modal Selector de Plantillas -->
+    <div id="cv-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-file-alt"></i> Seleccionar Plantilla de CV</h2>
+                <button class="modal-close" onclick="AdminController.closeCvModal()">&times;</button>
+            </div>
+            <div id="cv-options-container" class="cv-container">
+                <!-- Las opciones se cargarán dinámicamente -->
+            </div>
+        </div>
+    </div>
+
     <!-- Scripts -->
     <script src="js/config/api.config.js"></script>
     <script src="js/utils/helpers.js"></script>

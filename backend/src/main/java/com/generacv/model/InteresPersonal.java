@@ -1,5 +1,6 @@
 package com.generacv.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 
 /**
@@ -13,12 +14,14 @@ public class InteresPersonal {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_interes")
+    @JsonProperty("id_interes")
     private Integer idInteres;
 
     @Column(name = "interes", length = 180)
     private String interes;
 
     @Column(name = "id_usuario")
+    @JsonProperty("id_usuario")
     private Integer idUsuario;
 
     public InteresPersonal() {

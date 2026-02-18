@@ -26,6 +26,17 @@ const AuthService = {
     },
 
     /**
+     * Inicia sesión como invitado (rol 3)
+     */
+    async loginAsGuest() {
+        const data = await ApiService.post('/auth/guest', {});
+        if (data) {
+            this.saveSession(data);
+        }
+        return data;
+    },
+
+    /**
      * Cierra la sesión del usuario
      */
     async logout() {
@@ -35,7 +46,7 @@ const AuthService = {
             // Ignorar errores al cerrar sesión en el servidor
         } finally {
             this.clearSession();
-            Helpers.redirect('../index.html');
+            Helpers.redirect('index.html');
         }
     },
 
@@ -73,7 +84,8 @@ const AuthService = {
      */
     getRole() {
         const session = this.getSession();
-        return session ? session.rol_usuario : null;
+        if (!session) return null;
+        return session.rol_usuario !== undefined ? session.rol_usuario : session.rolUsuario;
     },
 
     /**
@@ -81,14 +93,22 @@ const AuthService = {
      */
     getUserId() {
         const session = this.getSession();
-        return session ? session.id_usuario : null;
+        if (!session) return null;
+        return session.id_usuario !== undefined ? session.id_usuario : session.idUsuario;
     },
 
     /**
      * Verifica si el usuario es administrador (rol 1)
      */
     isAdmin() {
-        return this.getRole() === 1;
+        return this.getRole() == 1;
+    },
+
+    /**
+     * Verifica si el usuario es invitado (rol 3)
+     */
+    isGuest() {
+        return this.getRole() == 3;
     },
 
     /**
@@ -97,12 +117,20 @@ const AuthService = {
      */
     requireAuth(requiredRole = null) {
         if (!this.isLoggedIn()) {
-            Helpers.redirect('../index.html');
+            Helpers.redirect('index.html');
             return false;
         }
-        if (requiredRole !== null && this.getRole() !== requiredRole) {
+
+        const role = this.getRole();
+
+        // Especial: Si se requiere rol 2 (estudiante), permitir también al rol 3 (invitado)
+        if (requiredRole === 2 && (role == 2 || role == 3)) {
+            return true;
+        }
+
+        if (requiredRole !== null && role != requiredRole) {
             // Redirigir según el rol real
-            if (this.isAdmin()) {
+            if (role == 1) {
                 Helpers.redirect('home-admin.html');
             } else {
                 Helpers.redirect('home.html');

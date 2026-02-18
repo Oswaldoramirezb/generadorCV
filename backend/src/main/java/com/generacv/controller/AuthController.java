@@ -49,6 +49,14 @@ public class AuthController {
         return ResponseEntity.ok(usuario);
     }
 
+    @PostMapping("/guest")
+    public ResponseEntity<UsuarioResponseDto> guest(HttpSession session) {
+        // ID virtual para el invitado
+        UsuarioResponseDto guest = new UsuarioResponseDto(-3, "invitado@generacv.com", 3);
+        session.setAttribute(SESSION_KEY, guest);
+        return ResponseEntity.ok(guest);
+    }
+
     @PostMapping("/logout")
     public ResponseEntity<Map<String, String>> logout(HttpSession session) {
         session.invalidate();

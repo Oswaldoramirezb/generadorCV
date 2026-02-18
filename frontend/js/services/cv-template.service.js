@@ -19,7 +19,7 @@ const CvTemplateService = {
         }
 
         try {
-            const endpoint = userId ? `/cv/completo/${userId}` : '/cv/completo';
+            const endpoint = userId ? `/admin/usuarios/${userId}/cv` : '/cv/completo';
             return await ApiService.get(endpoint);
         } catch (error) {
             document.body.innerHTML = `

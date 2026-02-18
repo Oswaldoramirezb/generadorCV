@@ -26,6 +26,27 @@ const LoginController = {
         if (form) {
             form.addEventListener('submit', (e) => this.handleLogin(e));
         }
+
+        // Manejar botón de invitado
+        const btnGuest = document.getElementById('btn-guest');
+        if (btnGuest) {
+            btnGuest.addEventListener('click', () => this.handleGuestLogin());
+        }
+    },
+
+    async handleGuestLogin() {
+        const btn = document.getElementById('btn-guest');
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Ingresando...';
+
+        try {
+            await AuthService.loginAsGuest();
+            Helpers.redirect('home.html');
+        } catch (error) {
+            Helpers.showError('msg-container', 'Error al ingresar como invitado');
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fas fa-user-secret"></i> Ingresar como Invitado';
+        }
     },
 
     async handleLogin(e) {

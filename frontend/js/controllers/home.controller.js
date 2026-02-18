@@ -154,14 +154,18 @@ const HomeController = {
     // ─── Datos Personales ────────────────────────────────────────────────────
 
     async loadDatosPersonales(container) {
-        const datos = await CvService.getDatosPersonales();
+        const data = await CvService.getDatosPersonales();
         let html = `<h2><i class="fas fa-user"></i> Datos Personales</h2>`;
 
-        if (!datos || datos.length === 0) {
+        // Normalizar los datos: el backend devuelve un objeto único o null
+        // El frontend original esperaba un array. Soportamos ambos.
+        const items = data ? (Array.isArray(data) ? data : [data]) : [];
+
+        if (items.length === 0) {
             html += `<p style="color:#777;margin-bottom:15px;">No hay datos personales registrados.</p>`;
             html += `<button class="btn btn-primary" onclick="HomeController.showAddForm('datos_personales')"><i class="fas fa-plus"></i> Agregar</button>`;
         } else {
-            datos.forEach(d => {
+            items.forEach(d => {
                 html += `
                 <div class="data-item">
                     <p><strong>Nombre:</strong> ${Helpers.sanitize(d.nombre_datos)}</p>
@@ -177,7 +181,8 @@ const HomeController = {
                     </div>
                 </div>`;
             });
-            html += `<button class="btn btn-primary" onclick="HomeController.showAddForm('datos_personales')"><i class="fas fa-plus"></i> Agregar otro</button>`;
+            // En datos personales solo permitimos uno por ahora según la estructura 1-a-1 del backend
+            // html += `<button class="btn btn-primary" onclick="HomeController.showAddForm('datos_personales')"><i class="fas fa-plus"></i> Agregar otro</button>`;
         }
         container.innerHTML = html;
     },
@@ -624,17 +629,34 @@ const HomeController = {
         return data;
     },
 
-    async submitForm(serviceCall, section, msgId) {
-        const msgEl = document.getElementById(msgId);
-        if (msgEl) msgEl.innerHTML = '';
+    async submitForm(apiCall, sectionName, msgContainerId) {
+        Helpers.clearMessages(msgContainerId);
+
+        // Bloqueo para invitados (Rol 3)
+        if (AuthService.isGuest()) {
+            const html = `
+                <div class="info-message animated pulse">
+                    <i class="fas fa-info-circle"></i> <strong>Registro Obligatorio:</strong> 
+                    Estás navegando como invitado. Para guardar tu información y generar tu CV, 
+                    debes <a href="javascript:void(0)" onclick="AuthService.logout(); location.href='register.html'" style="color:var(--primary-color); font-weight:bold; text-decoration:underline;">registrarte aquí</a>.
+                </div>
+            `;
+            const container = document.getElementById(msgContainerId);
+            if (container) {
+                container.innerHTML = html;
+                container.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            } else {
+                alert('Registro obligatorio: Los invitados no pueden guardar información.');
+            }
+            return;
+        }
 
         try {
-            await serviceCall();
-            this.loadSection(section);
+            await apiCall();
+            Helpers.showSuccess(msgContainerId, '¡Datos guardados correctamente!');
+            setTimeout(() => this.loadSection(sectionName), 1500);
         } catch (error) {
-            if (msgEl) {
-                msgEl.innerHTML = `<div class="error-message"><i class="fas fa-exclamation-circle"></i> ${error.message}</div>`;
-            }
+            Helpers.showError(msgContainerId, error.message);
         }
     }
 };

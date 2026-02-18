@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,6 +9,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="css/styles.css">
 </head>
+
 <body class="auth-body">
     <div class="auth-container animated">
         <div class="auth-logo">
@@ -26,14 +28,16 @@
                 <label for="correo">
                     <i class="fas fa-envelope"></i> Correo Electrónico
                 </label>
-                <input type="text" id="correo" name="correo" placeholder="ejemplo@dominio.com" autocomplete="off" required>
+                <input type="text" id="correo" name="correo" placeholder="ejemplo@dominio.com" autocomplete="off"
+                    required>
             </div>
 
             <div class="form-group">
                 <label for="contrasena">
                     <i class="fas fa-lock"></i> Contraseña
                 </label>
-                <input type="password" id="contrasena" name="contrasena" placeholder="Ingresa tu contraseña" autocomplete="off" required>
+                <input type="password" id="contrasena" name="contrasena" placeholder="Ingresa tu contraseña"
+                    autocomplete="off" required>
             </div>
 
             <div class="auth-actions">
@@ -43,6 +47,10 @@
                 <a href="register.html" class="btn btn-secondary">
                     <i class="fas fa-user-plus"></i> Crear Cuenta
                 </a>
+                <button type="button" id="btn-guest" class="btn"
+                    style="margin-top:10px; background:#f0f0f0; color:#555; width:100%;">
+                    <i class="fas fa-user-secret"></i> Ingresar como Invitado
+                </button>
             </div>
         </form>
 
@@ -58,4 +66,5 @@
     <script src="js/services/auth.service.js"></script>
     <script src="js/controllers/login.controller.js"></script>
 </body>
+
 </html>

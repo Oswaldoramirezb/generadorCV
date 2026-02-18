@@ -25,7 +25,7 @@ const ApiService = {
             if (response.status === 401) {
                 // No autenticado - redirigir al login
                 AuthService.clearSession();
-                Helpers.redirect('../index.html');
+                Helpers.redirect('index.html');
                 return null;
             }
 
@@ -45,7 +45,7 @@ const ApiService = {
 
         } catch (error) {
             if (error.name === 'TypeError' && error.message.includes('fetch')) {
-                throw new Error('No se puede conectar con el servidor. Verifica que el backend esté corriendo en http://localhost:8080');
+                throw new Error('No se puede conectar con el servidor. Verifica que el backend esté corriendo en http://localhost:8081');
             }
             throw error;
         }
