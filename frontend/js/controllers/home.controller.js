@@ -154,14 +154,18 @@ const HomeController = {
     // ─── Datos Personales ────────────────────────────────────────────────────
 
     async loadDatosPersonales(container) {
-        const datos = await CvService.getDatosPersonales();
+        const data = await CvService.getDatosPersonales();
         let html = `<h2><i class="fas fa-user"></i> Datos Personales</h2>`;
 
-        if (!datos || datos.length === 0) {
+        // Normalizar los datos: el backend devuelve un objeto único o null
+        // El frontend original esperaba un array. Soportamos ambos.
+        const items = data ? (Array.isArray(data) ? data : [data]) : [];
+
+        if (items.length === 0) {
             html += `<p style="color:#777;margin-bottom:15px;">No hay datos personales registrados.</p>`;
             html += `<button class="btn btn-primary" onclick="HomeController.showAddForm('datos_personales')"><i class="fas fa-plus"></i> Agregar</button>`;
         } else {
-            datos.forEach(d => {
+            items.forEach(d => {
                 html += `
                 <div class="data-item">
                     <p><strong>Nombre:</strong> ${Helpers.sanitize(d.nombre_datos)}</p>
@@ -177,7 +181,8 @@ const HomeController = {
                     </div>
                 </div>`;
             });
-            html += `<button class="btn btn-primary" onclick="HomeController.showAddForm('datos_personales')"><i class="fas fa-plus"></i> Agregar otro</button>`;
+            // En datos personales solo permitimos uno por ahora según la estructura 1-a-1 del backend
+            // html += `<button class="btn btn-primary" onclick="HomeController.showAddForm('datos_personales')"><i class="fas fa-plus"></i> Agregar otro</button>`;
         }
         container.innerHTML = html;
     },

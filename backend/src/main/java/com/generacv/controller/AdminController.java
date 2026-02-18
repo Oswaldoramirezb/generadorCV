@@ -47,7 +47,11 @@ public class AdminController {
         UsuarioResponseDto admin = AuthController.getSessionUser(session);
         Integer nuevoRol = body.get("rolUsuario");
         if (nuevoRol == null) {
-            throw new RuntimeException("El campo 'rolUsuario' es requerido");
+            nuevoRol = body.get("rol_usuario");
+        }
+
+        if (nuevoRol == null) {
+            throw new RuntimeException("El campo 'rolUsuario' o 'rol_usuario' es requerido");
         }
         return ResponseEntity.ok(adminService.cambiarRol(id, nuevoRol, admin.getIdUsuario()));
     }

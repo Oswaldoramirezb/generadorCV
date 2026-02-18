@@ -1,5 +1,6 @@
 package com.generacv.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 
 /**
@@ -16,30 +17,39 @@ public class Experiencia {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_experiencia")
+    @JsonProperty("id_experiencia")
     private Integer idExperiencia;
 
     @Column(name = "nombre_empresa", length = 100)
+    @JsonProperty("nombre_empresa")
     private String nombreEmpresa;
 
     @Column(name = "puesto_empresa", length = 100)
+    @JsonProperty("puesto_empresa")
     private String puestoEmpresa;
 
     @Column(name = "mes_inicio_empresa", length = 12)
+    @JsonProperty("mes_inicio_empresa")
     private String mesInicioEmpresa;
 
     @Column(name = "anio_inicio_empresa", length = 5)
+    @JsonProperty("anio_inicio_empresa")
     private String anioInicioEmpresa;
 
     @Column(name = "mes_finalizacion_empresa", length = 17)
+    @JsonProperty("mes_finalizacion_empresa")
     private String mesFinalizacionEmpresa;
 
     @Column(name = "anio_finalizacion_empresa", length = 5)
+    @JsonProperty("anio_finalizacion_empresa")
     private String anioFinalizacionEmpresa;
 
     @Column(name = "descripcion_empresa", length = 1000)
+    @JsonProperty("descripcion_empresa")
     private String descripcionEmpresa;
 
     @Column(name = "id_usuario")
+    @JsonProperty("id_usuario")
     private Integer idUsuario;
 
     // ── Constructores ──────────────────────────────────────────────────────────
