@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Curriculum Vitae - Kaxtil (English)</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
+    <style>
+        :root {
+            --accent: #c02727;
+        }
+
+        body {
+            background: #f4f4f4;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        .cv-wrapper {
+            max-width: 900px;
+            margin: 0 auto;
+            display: flex;
+            background: white;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 30%;
+            background: var(--accent);
+            color: white;
+            padding: 30px 20px;
+            box-sizing: border-box;
+        }
+
+        .sidebar h2 {
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.4);
+            padding-bottom: 6px;
+            margin-bottom: 12px;
+        }
+
+        .sidebar p,
+        .sidebar li {
+            font-size: 13px;
+            margin: 4px 0;
+        }
+
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .sidebar .name {
+            font-size: 22px;
+            font-weight: bold;
+            margin-bottom: 4px;
+        }
+
+        .sidebar .career {
+            font-size: 13px;
+            opacity: 0.85;
+            margin-bottom: 20px;
+        }
+
+        .main {
+            width: 70%;
+            padding: 30px 25px;
+            box-sizing: border-box;
+        }
+
+        .main h2 {
+            font-size: 15px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--accent);
+            border-bottom: 2px solid var(--accent);
+            padding-bottom: 5px;
+            margin-bottom: 12px;
+        }
+
+        .cv-item {
+            margin-bottom: 14px;
+            page-break-inside: avoid;
+        }
+
+        .cv-item .title {
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .cv-item .date {
+            font-style: italic;
+            font-size: 12px;
+            color: #666;
+        }
+
+        .cv-item .desc {
+            font-size: 13px;
+            margin-top: 3px;
+        }
+
+        .cv-section {
+            margin-bottom: 24px;
+            page-break-inside: avoid;
+        }
+
+        #downloadPDF {
+            display: block;
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        #downloadPDF:hover {
+            background-color: #45a049;
+        }
+
+        #loading {
+            text-align: center;
+            padding: 60px;
+            font-family: Arial;
+            color: #777;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="loading">Loading CV...</div>
+    <div id="cv-content" class="cv-wrapper" style="display:none;"></div>
+    <button id="downloadPDF" style="display:none;">⬇ Download PDF</button>
+
+    <script src="../js/config/api.config.js"></script>
+    <script src="../js/utils/helpers.js"></script>
+    <script src="../js/services/api.service.js"></script>
+    <script src="../js/services/auth.service.js"></script>
+    <script src="../js/services/cv-template.service.js"></script>
+    <script>
+        const colorParam = new URLSearchParams(window.location.search).get('color') || 'rojo';
+        const colorMap = { rojo: '#c02727', azul: '#0066cc', verde: '#28a745' };
+        document.documentElement.style.setProperty('--accent', colorMap[colorParam] || colorMap.rojo);
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            const cv = await CvTemplateService.loadCvData();
+            if (!cv) return;
+
+            const e = CvTemplateService.esc;
+            const fp = CvTemplateService.formatPeriod.bind(CvTemplateService);
+            const d = cv.datosPersonales;
+
+            let sidebar = `
+                <div class="name">${e(d?.nombre_datos) || 'Name'}</div>
+                <div class="career">${e(d?.licenciatura_datos) || 'Degree'}</div>
+                <h2>Contact</h2>
+                <p>${e(d?.correo_datos) || 'email@example.com'}</p>
+                <p>${e(d?.telefono_datos) || '+00-0000-0000'}</p>
+                <p>${e(d?.ciudad_datos) || 'City'}</p>`;
+
+            if (d?.porcentaje_creditos) {
+                sidebar += `<p style="margin-top:10px;font-size:12px;">${e(d.porcentaje_creditos)}% of credits at UAM Azcapotzalco</p>`;
+            }
+
+            if (cv.habilidades?.length) {
+                sidebar += `<h2 style="margin-top:20px;">Skills</h2><ul>`;
+                cv.habilidades.forEach(r => { sidebar += `<li>${e(r.habilidad)}</li>`; });
+                sidebar += `</ul>`;
+            }
+
+            if (cv.idiomas?.length) {
+                sidebar += `<h2 style="margin-top:20px;">Languages</h2><ul>`;
+                cv.idiomas.forEach(r => { sidebar += `<li>${e(r.nombre_idioma)} - ${e(r.nivel_idioma)}</li>`; });
+                sidebar += `</ul>`;
+            }
+
+            if (cv.intereses?.length) {
+                sidebar += `<h2 style="margin-top:20px;">Interests</h2><ul>`;
+                cv.intereses.forEach(r => { sidebar += `<li>${e(r.interes)}</li>`; });
+                sidebar += `</ul>`;
+            }
+
+            let main = '';
+
+            if (cv.educacion?.length) {
+                main += `<div class="cv-section"><h2>Education</h2>`;
+                cv.educacion.forEach(r => {
+                    main += `<div class="cv-item">
+                        <div class="title">${e(r.nombre_institucion)}</div>
+                        <div class="date">${fp(r.mes_inicio_institucion, r.anio_inicio_institucion, r.mes_finalizacion_institucion, r.anio_finalizacion_institucion)}</div>
+                        <div class="desc">${e(r.nivel_institucion)} in ${e(r.especialidad_institucion)}</div>
+                    </div>`;
+                });
+                main += `</div>`;
+            }
+
+            if (cv.experiencia?.length) {
+                main += `<div class="cv-section"><h2>Work Experience</h2>`;
+                cv.experiencia.forEach(r => {
+                    main += `<div class="cv-item">
+                        <div class="title">${e(r.nombre_empresa)}</div>
+                        <div class="date">${fp(r.mes_inicio_empresa, r.anio_inicio_empresa, r.mes_finalizacion_empresa, r.anio_finalizacion_empresa)}</div>
+                        <div class="desc">${e(r.puesto_empresa)}</div>
+                        <div class="desc">${e(r.descripcion_empresa)}</div>
+                    </div>`;
+                });
+                main += `</div>`;
+            }
+
+            if (cv.cursos?.length) {
+                main += `<div class="cv-section"><h2>Courses & Certifications</h2>`;
+                cv.cursos.forEach(r => {
+                    main += `<div class="cv-item">
+                        <div class="title">${e(r.nombre_curso)}</div>
+                        <div class="date">${e(r.mes_finalizacion_curso)} ${e(r.anio_finalizacion_curso)}</div>
+                        <div class="desc">${e(r.institucion_curso)} — ${e(r.duracion_curso)}</div>
+                    </div>`;
+                });
+                main += `</div>`;
+            }
+
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('cv-content').innerHTML = `
+                <div class="sidebar">${sidebar}</div>
+                <div class="main">${main}</div>`;
+            document.getElementById('cv-content').style.display = 'flex';
+            document.getElementById('downloadPDF').style.display = 'block';
+
+            CvTemplateService.setupPdfDownload('cv-content', `CV-Kaxtil-EN-${colorParam}.pdf`);
+        });
+    </script>
+</body>
+
+</html>
