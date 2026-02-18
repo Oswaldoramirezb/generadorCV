@@ -638,7 +638,7 @@ const HomeController = {
                 <div class="info-message animated pulse">
                     <i class="fas fa-info-circle"></i> <strong>Registro Obligatorio:</strong> 
                     Estás navegando como invitado. Para guardar tu información y generar tu CV, 
-                    debes <a href="register.html" style="color:var(--primary-color); font-weight:bold; text-decoration:underline;">registrarte aquí</a>.
+                    debes <a href="javascript:void(0)" onclick="AuthService.logout(); location.href='register.html'" style="color:var(--primary-color); font-weight:bold; text-decoration:underline;">registrarte aquí</a>.
                 </div>
             `;
             const container = document.getElementById(msgContainerId);
