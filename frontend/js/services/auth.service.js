@@ -26,6 +26,17 @@ const AuthService = {
     },
 
     /**
+     * Inicia sesión como invitado (rol 3)
+     */
+    async loginAsGuest() {
+        const data = await ApiService.post('/auth/guest', {});
+        if (data) {
+            this.saveSession(data);
+        }
+        return data;
+    },
+
+    /**
      * Cierra la sesión del usuario
      */
     async logout() {
@@ -94,6 +105,13 @@ const AuthService = {
     },
 
     /**
+     * Verifica si el usuario es invitado (rol 3)
+     */
+    isGuest() {
+        return this.getRole() == 3;
+    },
+
+    /**
      * Protege una página: redirige si no hay sesión o si el rol no coincide
      * @param {number|null} requiredRole - null = cualquier rol autenticado
      */
@@ -102,9 +120,17 @@ const AuthService = {
             Helpers.redirect('index.html');
             return false;
         }
-        if (requiredRole !== null && this.getRole() != requiredRole) {
-            // Redirigir según el rol real (== para tolerar string vs number)
-            if (this.isAdmin()) {
+
+        const role = this.getRole();
+
+        // Especial: Si se requiere rol 2 (estudiante), permitir también al rol 3 (invitado)
+        if (requiredRole === 2 && (role == 2 || role == 3)) {
+            return true;
+        }
+
+        if (requiredRole !== null && role != requiredRole) {
+            // Redirigir según el rol real
+            if (role == 1) {
                 Helpers.redirect('home-admin.html');
             } else {
                 Helpers.redirect('home.html');

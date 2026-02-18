@@ -38,6 +38,14 @@ public class CvController {
         this.cvService = cvService;
     }
 
+    private void checkGuest(HttpSession session) {
+        UsuarioResponseDto usuario = AuthController.getSessionUser(session);
+        if (usuario.getRolUsuario() == 3) {
+            throw new com.generacv.exception.ForbiddenException(
+                    "Registro obligatorio: Los invitados no pueden guardar información.");
+        }
+    }
+
     // ── CV Completo ────────────────────────────────────────────────────────────
 
     @GetMapping("/api/cv/completo")
@@ -57,6 +65,7 @@ public class CvController {
     @PostMapping("/api/datos-personales")
     public ResponseEntity<DatosPersonales> saveDatosPersonales(
             @RequestBody DatosPersonales datos, HttpSession session) {
+        checkGuest(session);
         UsuarioResponseDto usuario = AuthController.getSessionUser(session);
         return ResponseEntity.ok(cvService.saveDatosPersonales(datos, usuario.getIdUsuario()));
     }
@@ -65,6 +74,7 @@ public class CvController {
     public ResponseEntity<DatosPersonales> updateDatosPersonales(
             @PathVariable Integer id,
             @RequestBody DatosPersonales datos, HttpSession session) {
+        checkGuest(session);
         UsuarioResponseDto usuario = AuthController.getSessionUser(session);
         datos.setIdDatos(id);
         return ResponseEntity.ok(cvService.saveDatosPersonales(datos, usuario.getIdUsuario()));
@@ -73,6 +83,7 @@ public class CvController {
     @DeleteMapping("/api/datos-personales/{id}")
     public ResponseEntity<Map<String, String>> deleteDatosPersonales(
             @PathVariable Integer id, HttpSession session) {
+        checkGuest(session);
         UsuarioResponseDto usuario = AuthController.getSessionUser(session);
         cvService.deleteDatosPersonales(id, usuario.getIdUsuario());
         return ResponseEntity.ok(Map.of("message", "Datos personales eliminados"));
@@ -89,6 +100,7 @@ public class CvController {
     @PostMapping("/api/educacion")
     public ResponseEntity<Educacion> saveEducacion(
             @RequestBody Educacion educacion, HttpSession session) {
+        checkGuest(session);
         UsuarioResponseDto usuario = AuthController.getSessionUser(session);
         return ResponseEntity.ok(cvService.saveEducacion(educacion, usuario.getIdUsuario()));
     }
@@ -97,6 +109,7 @@ public class CvController {
     public ResponseEntity<Educacion> updateEducacion(
             @PathVariable Integer id,
             @RequestBody Educacion educacion, HttpSession session) {
+        checkGuest(session);
         UsuarioResponseDto usuario = AuthController.getSessionUser(session);
         return ResponseEntity.ok(cvService.updateEducacion(id, educacion, usuario.getIdUsuario()));
     }
@@ -104,6 +117,7 @@ public class CvController {
     @DeleteMapping("/api/educacion/{id}")
     public ResponseEntity<Map<String, String>> deleteEducacion(
             @PathVariable Integer id, HttpSession session) {
+        checkGuest(session);
         UsuarioResponseDto usuario = AuthController.getSessionUser(session);
         cvService.deleteEducacion(id, usuario.getIdUsuario());
         return ResponseEntity.ok(Map.of("message", "Educación eliminada"));
@@ -259,6 +273,7 @@ public class CvController {
     @DeleteMapping("/api/cursos/{id}")
     public ResponseEntity<Map<String, String>> deleteCurso(
             @PathVariable Integer id, HttpSession session) {
+        checkGuest(session);
         UsuarioResponseDto usuario = AuthController.getSessionUser(session);
         cvService.deleteCurso(id, usuario.getIdUsuario());
         return ResponseEntity.ok(Map.of("message", "Curso eliminado"));

@@ -629,17 +629,34 @@ const HomeController = {
         return data;
     },
 
-    async submitForm(serviceCall, section, msgId) {
-        const msgEl = document.getElementById(msgId);
-        if (msgEl) msgEl.innerHTML = '';
+    async submitForm(apiCall, sectionName, msgContainerId) {
+        Helpers.clearMessages(msgContainerId);
+
+        // Bloqueo para invitados (Rol 3)
+        if (AuthService.isGuest()) {
+            const html = `
+                <div class="info-message animated pulse">
+                    <i class="fas fa-info-circle"></i> <strong>Registro Obligatorio:</strong> 
+                    Estás navegando como invitado. Para guardar tu información y generar tu CV, 
+                    debes <a href="register.html" style="color:var(--primary-color); font-weight:bold; text-decoration:underline;">registrarte aquí</a>.
+                </div>
+            `;
+            const container = document.getElementById(msgContainerId);
+            if (container) {
+                container.innerHTML = html;
+                container.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            } else {
+                alert('Registro obligatorio: Los invitados no pueden guardar información.');
+            }
+            return;
+        }
 
         try {
-            await serviceCall();
-            this.loadSection(section);
+            await apiCall();
+            Helpers.showSuccess(msgContainerId, '¡Datos guardados correctamente!');
+            setTimeout(() => this.loadSection(sectionName), 1500);
         } catch (error) {
-            if (msgEl) {
-                msgEl.innerHTML = `<div class="error-message"><i class="fas fa-exclamation-circle"></i> ${error.message}</div>`;
-            }
+            Helpers.showError(msgContainerId, error.message);
         }
     }
 };
