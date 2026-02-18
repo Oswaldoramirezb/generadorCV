@@ -35,7 +35,7 @@ const AuthService = {
             // Ignorar errores al cerrar sesión en el servidor
         } finally {
             this.clearSession();
-            Helpers.redirect('../index.html');
+            Helpers.redirect('index.html');
         }
     },
 
@@ -73,7 +73,8 @@ const AuthService = {
      */
     getRole() {
         const session = this.getSession();
-        return session ? session.rol_usuario : null;
+        if (!session) return null;
+        return session.rol_usuario !== undefined ? session.rol_usuario : session.rolUsuario;
     },
 
     /**
@@ -81,14 +82,15 @@ const AuthService = {
      */
     getUserId() {
         const session = this.getSession();
-        return session ? session.id_usuario : null;
+        if (!session) return null;
+        return session.id_usuario !== undefined ? session.id_usuario : session.idUsuario;
     },
 
     /**
      * Verifica si el usuario es administrador (rol 1)
      */
     isAdmin() {
-        return this.getRole() === 1;
+        return this.getRole() == 1;
     },
 
     /**
@@ -97,11 +99,11 @@ const AuthService = {
      */
     requireAuth(requiredRole = null) {
         if (!this.isLoggedIn()) {
-            Helpers.redirect('../index.html');
+            Helpers.redirect('index.html');
             return false;
         }
-        if (requiredRole !== null && this.getRole() !== requiredRole) {
-            // Redirigir según el rol real
+        if (requiredRole !== null && this.getRole() != requiredRole) {
+            // Redirigir según el rol real (== para tolerar string vs number)
             if (this.isAdmin()) {
                 Helpers.redirect('home-admin.html');
             } else {
