@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GeneraCV - Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+
+    <!-- ── Menú de navegación ── -->
+    <nav id="menu">
+        <a href="#" id="menu-cv"><i class="fas fa-file-alt"></i> CV</a>
+        <a href="#" id="menu-datos"><i class="fas fa-user"></i> Datos personales</a>
+        <a href="#" id="menu-educacion"><i class="fas fa-graduation-cap"></i> Educación</a>
+        <a href="#" id="menu-experiencia"><i class="fas fa-briefcase"></i> Experiencia</a>
+        <a href="#" id="menu-habilidades"><i class="fas fa-chart-bar"></i> Habilidades</a>
+        <a href="#" id="menu-intereses"><i class="fas fa-heart"></i> Intereses personales</a>
+        <a href="#" id="menu-idiomas"><i class="fas fa-language"></i> Idiomas</a>
+        <a href="#" id="menu-cursos"><i class="fas fa-certificate"></i> Cursos</a>
+        <a href="#" id="menu-logout" class="menu-logout"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</a>
+    </nav>
+
+    <!-- ── Área de contenido dinámico ── -->
+    <div id="consulta"></div>
+
+    <!-- ════════════════════════════════════════════════════════════════
+         FORMULARIOS DE AGREGAR
+    ═══════════════════════════════════════════════════════════════════ -->
+
+    <!-- Agregar Datos Personales -->
+    <div id="form-add-datos_personales" class="form-section">
+        <h2><i class="fas fa-user"></i> Agregar Datos Personales</h2>
+        <div id="form-msg-datos_personales"></div>
+        <form>
+            <div class="form-group">
+                <label>Nombre:</label>
+                <input type="text" name="nombre_datos" required placeholder="Nombre completo">
+            </div>
+            <div class="form-group">
+                <label>Licenciatura:</label>
+                <select id="add-licenciatura" name="licenciatura_datos" required>
+                    <option value="">Seleccione una opción</option>
+                    <option value="Ingeniería Ambiental">Ingeniería Ambiental</option>
+                    <option value="Ingeniería Civil">Ingeniería Civil</option>
+                    <option value="Ingeniería en Computación">Ingeniería en Computación</option>
+                    <option value="Ingeniería Eléctrica">Ingeniería Eléctrica</option>
+                    <option value="Ingeniería Electrónica">Ingeniería Electrónica</option>
+                    <option value="Ingeniería Física">Ingeniería Física</option>
+                    <option value="Ingeniería Industrial">Ingeniería Industrial</option>
+                    <option value="Ingeniería Mecánica">Ingeniería Mecánica</option>
+                    <option value="Ingeniería Metalúrgica">Ingeniería Metalúrgica</option>
+                    <option value="Ingeniería Química">Ingeniería Química</option>
+                    <option value="other">Otra (Especificar)</option>
+                </select>
+            </div>
+            <div id="add-otra-licenciatura-div" class="form-group" style="display:none;">
+                <label>Especificar:</label>
+                <input type="text" id="add-otra-licenciatura" name="otra_licenciatura"
+                    placeholder="Ingrese su licenciatura">
+            </div>
+            <div class="form-group">
+                <label>Matrícula:</label>
+                <input type="text" name="matricula_datos" required placeholder="Ej. A12345678">
+            </div>
+            <div class="form-group">
+                <label>Ciudad:</label>
+                <input type="text" name="ciudad_datos" required placeholder="Ciudad actual">
+            </div>
+            <div class="form-group">
+                <label>Teléfono:</label>
+                <input type="text" name="telefono_datos" required placeholder="Ej. 555-123-4567">
+            </div>
+            <div class="form-group">
+                <label>Correo:</label>
+                <input type="email" name="correo_datos" required placeholder="ejemplo@dominio.com">
+            </div>
+            <div class="form-group">
+                <label>% de créditos:</label>
+                <input type="text" name="porcentaje_creditos" required placeholder="Ej. 75%">
+            </div>
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Guardar</button>
+                <button type="button" class="btn btn-secondary"
+                    onclick="HomeController.loadSection('datos_personales')">Cancelar</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Agregar Educación -->
+    <div id="form-add-educacion" class="form-section">
+        <h2><i class="fas fa-graduation-cap"></i> Agregar Educación</h2>
+        <div id="form-msg-educacion"></div>
+        <form>
+            <div class="form-group">
+                <label>Institución:</label>
+                <input type="text" name="nombre_institucion" required placeholder="Nombre de la institución educativa">
+            </div>
+            <div class="form-group">
+                <label>Nivel:</label>
+                <input type="text" name="nivel_institucion" required placeholder="Ej. Licenciatura, Maestría">
+            </div>
+            <div class="form-group">
+                <label>Especialidad:</label>
+                <input type="text" name="especialidad_institucion" required placeholder="Ej. Ingeniería en Sistemas">
+            </div>
+            <div class="form-group">
+                <label>Mes de Inicio:</label>
+                <input type="text" name="mes_inicio_institucion" required placeholder="Ej. Enero">
+            </div>
+            <div class="form-group">
+                <label>Año de Inicio:</label>
+                <input type="text" name="anio_inicio_institucion" required placeholder="Ej. 2020">
+            </div>
+            <div class="form-group">
+                <label>Mes de Finalización:</label>
+                <input type="text" name="mes_finalizacion_institucion" placeholder="Ej. Diciembre o Actual">
+                <span class="form-hint">Si actualmente estudias aquí, escribe "Actual", "Actualmente" o
+                    "Presente".</span>
+            </div>
+            <div class="form-group">
+                <label>Año de Finalización:</label>
+                <input type="text" name="anio_finalizacion_institucion" placeholder="Ej. 2024">
+            </div>
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Guardar</button>
+                <button type="button" class="btn btn-secondary"
+                    onclick="HomeController.loadSection('educacion')">Cancelar</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Agregar Experiencia -->
+    <div id="form-add-experiencia" class="form-section">
+        <h2><i class="fas fa-briefcase"></i> Agregar Experiencia</h2>
+        <div id="form-msg-experiencia"></div>
+        <form>
+            <div class="form-group">
+                <label>Empresa:</label>
+                <input type="text" name="nombre_empresa" required placeholder="Nombre de la empresa">
+            </div>
+            <div class="form-group">
+                <label>Puesto:</label>
+                <input type="text" name="puesto_empresa" required placeholder="Puesto o cargo desempeñado">
+            </div>
+            <div class="form-group">
+                <label>Mes de Inicio:</label>
+                <input type="text" name="mes_inicio_empresa" required placeholder="Ej. Enero">
+            </div>
+            <div class="form-group">
+                <label>Año de Inicio:</label>
+                <input type="text" name="anio_inicio_empresa" required placeholder="Ej. 2020">
+            </div>
+            <div class="form-group">
+                <label>Mes de Finalización:</label>
+                <input type="text" name="mes_finalizacion_empresa" placeholder="Ej. Diciembre o Actual">
+                <span class="form-hint">Si actualmente trabajas aquí, escribe "Actual", "Actualmente" o
+                    "Presente".</span>
+            </div>
+            <div class="form-group">
+                <label>Año de Finalización:</label>
+                <input type="text" name="anio_finalizacion_empresa" placeholder="Ej. 2024">
+            </div>
+            <div class="form-group">
+                <label>Descripción:</label>
+                <textarea name="descripcion_empresa" placeholder="Describe tus responsabilidades y logros"></textarea>
+            </div>
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Guardar</button>
+                <button type="button" class="btn btn-secondary"
+                    onclick="HomeController.loadSection('experiencia')">Cancelar</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Agregar Habilidades -->
+    <div id="form-add-habilidades" class="form-section">
+        <h2><i class="fas fa-chart-bar"></i> Agregar Habilidad</h2>
+        <div id="form-msg-habilidades"></div>
+        <form>
+            <div class="form-group">
+                <label>Habilidad:</label>
+                <input type="text" name="habilidad" required placeholder="Ej. Programación en Python">
+            </div>
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Guardar</button>
+                <button type="button" class="btn btn-secondary"
+                    onclick="HomeController.loadSection('habilidades')">Cancelar</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Agregar Intereses -->
+    <div id="form-add-intereses" class="form-section">
+        <h2><i class="fas fa-heart"></i> Agregar Interés Personal</h2>
+        <div id="form-msg-intereses"></div>
+        <form>
+            <div class="form-group">
+                <label>Interés:</label>
+                <input type="text" name="interes" required placeholder="Ej. Fotografía">
+            </div>
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Guardar</button>
+                <button type="button" class="btn btn-secondary"
+                    onclick="HomeController.loadSection('intereses')">Cancelar</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Agregar Idiomas -->
+    <div id="form-add-idiomas" class="form-section">
+        <h2><i class="fas fa-language"></i> Agregar Idioma</h2>
+        <div id="form-msg-idiomas"></div>
+        <form>
+            <div class="form-group">
+                <label>Idioma:</label>
+                <input type="text" name="nombre_idioma" required placeholder="Ej. Inglés">
+            </div>
+            <div class="form-group">
+                <label>Nivel:</label>
+                <input type="text" name="nivel_idioma" required placeholder="Ej. Avanzado, B2">
+            </div>
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Guardar</button>
+                <button type="button" class="btn btn-secondary"
+                    onclick="HomeController.loadSection('idiomas')">Cancelar</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Agregar Cursos -->
+    <div id="form-add-cursos" class="form-section">
+        <h2><i class="fas fa-certificate"></i> Agregar Curso</h2>
+        <div id="form-msg-cursos"></div>
+        <form>
+            <div class="form-group">
+                <label>Nombre del Curso:</label>
+                <input type="text" name="nombre_curso" required placeholder="Nombre del curso o certificación">
+            </div>
+            <div class="form-group">
+                <label>Institución:</label>
+                <input type="text" name="institucion_curso" required placeholder="Nombre de la institución">
+            </div>
+            <div class="form-group">
+                <label>Duración:</label>
+                <input type="text" name="duracion_curso" required placeholder="Ej. 40 horas">
+                <span class="form-hint">Especifique si son horas, días, meses, y cantidad.</span>
+            </div>
+            <div class="form-group">
+                <label>Mes de Finalización:</label>
+                <input type="text" name="mes_finalizacion_curso" required placeholder="Ej. Diciembre">
+            </div>
+            <div class="form-group">
+                <label>Año de Finalización:</label>
+                <input type="text" name="anio_finalizacion_curso" required placeholder="Ej. 2023">
+            </div>
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Guardar</button>
+                <button type="button" class="btn btn-secondary"
+                    onclick="HomeController.loadSection('cursos')">Cancelar</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- ════════════════════════════════════════════════════════════════
+         FORMULARIOS DE EDITAR
+    ═══════════════════════════════════════════════════════════════════ -->
+
+    <!-- Editar Datos Personales -->
+    <div id="form-edit-datos_personales" class="form-section">
+        <h2><i class="fas fa-user-edit"></i> Editar Datos Personales</h2>
+        <div id="form-msg-edit-datos_personales"></div>
+        <form>
+            <input type="hidden" name="id_datos">
+            <div class="form-group">
+                <label>Nombre:</label>
+                <input type="text" name="nombre_datos" required>
+            </div>
+            <div class="form-group">
+                <label>Licenciatura:</label>
+                <select id="edit-licenciatura" name="licenciatura_datos" required>
+                    <option value="">Seleccione una opción</option>
+                    <option value="Ingeniería Ambiental">Ingeniería Ambiental</option>
+                    <option value="Ingeniería Civil">Ingeniería Civil</option>
+                    <option value="Ingeniería en Computación">Ingeniería en Computación</option>
+                    <option value="Ingeniería Eléctrica">Ingeniería Eléctrica</option>
+                    <option value="Ingeniería Electrónica">Ingeniería Electrónica</option>
+                    <option value="Ingeniería Física">Ingeniería Física</option>
+                    <option value="Ingeniería Industrial">Ingeniería Industrial</option>
+                    <option value="Ingeniería Mecánica">Ingeniería Mecánica</option>
+                    <option value="Ingeniería Metalúrgica">Ingeniería Metalúrgica</option>
+                    <option value="Ingeniería Química">Ingeniería Química</option>
+                    <option value="other">Otra (Especificar)</option>
+                </select>
+            </div>
+            <div id="edit-otra-licenciatura-div" class="form-group" style="display:none;">
+                <label>Especificar:</label>
+                <input type="text" id="edit-otra-licenciatura" name="otra_licenciatura">
+            </div>
+            <div class="form-group">
+                <label>Matrícula:</label>
+                <input type="text" name="matricula_datos" required>
+            </div>
+            <div class="form-group">
+                <label>Ciudad:</label>
+                <input type="text" name="ciudad_datos" required>
+            </div>
+            <div class="form-group">
+                <label>Teléfono:</label>
+                <input type="text" name="telefono_datos" required>
+            </div>
+            <div class="form-group">
+                <label>Correo:</label>
+                <input type="email" name="correo_datos" required>
+            </div>
+            <div class="form-group">
+                <label>% de créditos:</label>
+                <input type="text" name="porcentaje_creditos" required>
+            </div>
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Actualizar</button>
+                <button type="button" class="btn btn-secondary"
+                    onclick="HomeController.loadSection('datos_personales')">Cancelar</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Editar Educación -->
+    <div id="form-edit-educacion" class="form-section">
+        <h2><i class="fas fa-graduation-cap"></i> Editar Educación</h2>
+        <div id="form-msg-edit-educacion"></div>
+        <form>
+            <input type="hidden" name="id_educacion">
+            <div class="form-group"><label>Institución:</label><input type="text" name="nombre_institucion" required>
+            </div>
+            <div class="form-group"><label>Nivel:</label><input type="text" name="nivel_institucion" required></div>
+            <div class="form-group"><label>Especialidad:</label><input type="text" name="especialidad_institucion"
+                    required></div>
+            <div class="form-group"><label>Mes de Inicio:</label><input type="text" name="mes_inicio_institucion"
+                    required></div>
+            <div class="form-group"><label>Año de Inicio:</label><input type="text" name="anio_inicio_institucion"
+                    required></div>
+            <div class="form-group">
+                <label>Mes de Finalización:</label>
+                <input type="text" name="mes_finalizacion_institucion">
+                <span class="form-hint">Escribe "Actual", "Actualmente" o "Presente" si aún estudias aquí.</span>
+            </div>
+            <div class="form-group"><label>Año de Finalización:</label><input type="text"
+                    name="anio_finalizacion_institucion"></div>
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Actualizar</button>
+                <button type="button" class="btn btn-secondary"
+                    onclick="HomeController.loadSection('educacion')">Cancelar</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Editar Experiencia -->
+    <div id="form-edit-experiencia" class="form-section">
+        <h2><i class="fas fa-briefcase"></i> Editar Experiencia</h2>
+        <div id="form-msg-edit-experiencia"></div>
+        <form>
+            <input type="hidden" name="id_experiencia">
+            <div class="form-group"><label>Empresa:</label><input type="text" name="nombre_empresa" required></div>
+            <div class="form-group"><label>Puesto:</label><input type="text" name="puesto_empresa" required></div>
+            <div class="form-group"><label>Mes de Inicio:</label><input type="text" name="mes_inicio_empresa" required>
+            </div>
+            <div class="form-group"><label>Año de Inicio:</label><input type="text" name="anio_inicio_empresa" required>
+            </div>
+            <div class="form-group">
+                <label>Mes de Finalización:</label>
+                <input type="text" name="mes_finalizacion_empresa">
+                <span class="form-hint">Escribe "Actual", "Actualmente" o "Presente" si aún trabajas aquí.</span>
+            </div>
+            <div class="form-group"><label>Año de Finalización:</label><input type="text"
+                    name="anio_finalizacion_empresa"></div>
+            <div class="form-group"><label>Descripción:</label><textarea name="descripcion_empresa"></textarea></div>
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Actualizar</button>
+                <button type="button" class="btn btn-secondary"
+                    onclick="HomeController.loadSection('experiencia')">Cancelar</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Editar Habilidades -->
+    <div id="form-edit-habilidades" class="form-section">
+        <h2><i class="fas fa-chart-bar"></i> Editar Habilidad</h2>
+        <div id="form-msg-edit-habilidades"></div>
+        <form>
+            <input type="hidden" name="id_habilidades">
+            <div class="form-group"><label>Habilidad:</label><input type="text" name="habilidad" required></div>
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Actualizar</button>
+                <button type="button" class="btn btn-secondary"
+                    onclick="HomeController.loadSection('habilidades')">Cancelar</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Editar Intereses -->
+    <div id="form-edit-intereses" class="form-section">
+        <h2><i class="fas fa-heart"></i> Editar Interés Personal</h2>
+        <div id="form-msg-edit-intereses"></div>
+        <form>
+            <input type="hidden" name="id_interes">
+            <div class="form-group"><label>Interés:</label><input type="text" name="interes" required></div>
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Actualizar</button>
+                <button type="button" class="btn btn-secondary"
+                    onclick="HomeController.loadSection('intereses')">Cancelar</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Editar Idiomas -->
+    <div id="form-edit-idiomas" class="form-section">
+        <h2><i class="fas fa-language"></i> Editar Idioma</h2>
+        <div id="form-msg-edit-idiomas"></div>
+        <form>
+            <input type="hidden" name="id_idioma">
+            <div class="form-group"><label>Idioma:</label><input type="text" name="nombre_idioma" required></div>
+            <div class="form-group"><label>Nivel:</label><input type="text" name="nivel_idioma" required></div>
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Actualizar</button>
+                <button type="button" class="btn btn-secondary"
+                    onclick="HomeController.loadSection('idiomas')">Cancelar</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Editar Cursos -->
+    <div id="form-edit-cursos" class="form-section">
+        <h2><i class="fas fa-certificate"></i> Editar Curso</h2>
+        <div id="form-msg-edit-cursos"></div>
+        <form>
+            <input type="hidden" name="id_curso">
+            <div class="form-group"><label>Nombre del Curso:</label><input type="text" name="nombre_curso" required>
+            </div>
+            <div class="form-group"><label>Institución:</label><input type="text" name="institucion_curso" required>
+            </div>
+            <div class="form-group">
+                <label>Duración:</label>
+                <input type="text" name="duracion_curso" required>
+                <span class="form-hint">Especifique si son horas, días, meses, y cantidad.</span>
+            </div>
+            <div class="form-group"><label>Mes de Finalización:</label><input type="text" name="mes_finalizacion_curso"
+                    required></div>
+            <div class="form-group"><label>Año de Finalización:</label><input type="text" name="anio_finalizacion_curso"
+                    required></div>
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Actualizar</button>
+                <button type="button" class="btn btn-secondary"
+                    onclick="HomeController.loadSection('cursos')">Cancelar</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/config/api.config.js"></script>
+    <script src="js/utils/helpers.js"></script>
+    <script src="js/services/api.service.js"></script>
+    <script src="js/services/auth.service.js"></script>
+    <script src="js/services/cv.service.js"></script>
+    <script src="js/controllers/home.controller.js"></script>
+</body>
+
+</html>
